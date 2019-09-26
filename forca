@@ -1,0 +1,87 @@
+import random
+
+def jogar():
+    
+    abertura()
+    palavra_secreta = gerar_palavra_secreta()
+   
+    
+    letras_acertadas = ["_" for i in palavra_secreta]
+    letras_ditas = []
+        
+    enforcou = False
+    acertou = False
+    erros = 0
+    certo = 0
+    
+    print(letras_acertadas)
+
+    while (not enforcou and not acertou):
+        # Entrada do chute do usuário
+        chute = input("\nQual a letra? ")
+        chute = chute.strip().lower()
+        index = 0
+        ###
+
+        letras_ja_digitadas(chute, letras_ditas)
+        
+        # Verificação do chute do usuário
+        if chute in palavra_secreta:
+            certo += 1
+            for letra in palavra_secreta:
+                if chute == letra:
+                    letras_acertadas[index] = chute
+                index += 1
+            print("\n", letras_acertadas)
+        else: # Contador de erros do usuário e Imprime as tentativas restantes
+            erros += 1
+            if erros < 5: # Contador de tentativas restantes do usuário
+                print(letras_acertadas)
+                print("\nVocê errou. Você ainda possuí {} tentativas.\n".format(5-erros))
+        
+        if erros == 7:
+            print("\nVocê errou 5 vezes. Você foi enforcado!")
+            print("\nA palavra secreta era {}.".format(palavra_secreta))
+            enforcou = True
+        if "_" not in letras_acertadas: # Determine se não existir mais underline, o usuário acerto a palavra 
+            print("\nVocê acertou a palavra secreta. Parabéns!")
+            acertou = True
+        if certo == 9: # Contador para que vê se o usuário repetir demais a mesma letra, ele perderá o jogo
+            print("\nVocê repetiu demais a mesma letra.")
+            break
+    print("\n********** Fim do jogo **********")
+
+def abertura():
+    
+    print("*********************************")
+    print("** Bem vindo ao jogo da Forca! **")
+    print("*********************************")
+
+def gerar_palavra_secreta():
+
+    arquivo = open("frutas.txt", "r") # Abre o arquivo das palavras secretas
+    # {
+    palavras = []
+
+    for linha in arquivo: # For para contar todas as palavras secretas do arquivo, e adicionar a uma lista
+        linha = linha.strip()
+        palavras.append(linha) # Adiciona a palavra de cada linha na posição da lista
+    # }
+    arquivo.close()
+
+    num_random_palavras = random.randrange(0, len(palavras)) # Selecionha uma palavra randomica da lista 'palavras' 
+    palavra_secreta = palavras[num_random_palavras].lower() # Faz com que todas as letras da palavra secreta fique em minúsculo
+    return palavra_secreta
+
+def letras_ja_digitadas(chute, letras_ditas):
+    
+    if chute not in letras_ditas:
+        letras_ditas.append(chute)
+    elif chute in letras_ditas:
+        print("Cuidado! Você repetiu a mesma letra.")
+    print("\nLetras ditas: {}\n".format(letras_ditas))
+
+
+
+if(__name__ == "__main__"):
+    jogar()
